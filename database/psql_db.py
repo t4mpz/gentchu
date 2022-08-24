@@ -19,7 +19,7 @@ class Database(object):
 		self.connection = psql(
 			host=gbd.database_host,
 			database=gbd.db_name,
-			user=gbd.database_username,
+			user=gbd.database_user,
 			password=gbd.database_password
 		)
 		self.connected = True
