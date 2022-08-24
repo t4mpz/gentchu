@@ -1,18 +1,12 @@
 from psycopg2 import connect as psql
-# from psycopg2 import Connection
 from .objects import *
 from typing import List, Tuple
 from .security.BotData import BotData
+import logging
 
 gbd = BotData()
 
 class Database(object):
-	
-	HOST_CONST = "localhost"
-	DATABASE   = "gentchu"
-	USER       = "solenya"
-	PASSWORD   = "solenya"
-	connected  = False
 
 	
 	def __init__(self):
@@ -23,6 +17,11 @@ class Database(object):
 			password=gbd.database_pass
 		)
 		self.connected = True
+		logging.basicConfig(filename="logs/database.log", format="%(asctime)s %(message)s", filemode="w")
+		self.logger = logging.getLogger()
+		self.logger.setLevel(logging.DEBUG)
+		self.logger.info(f"Started connection with database ({gbd.database_host}) OK")
+
 
 
 class Distros(Database):
@@ -96,6 +95,7 @@ class Portifolios(Database):
 			with self.connection.cursor() as cur:
 				cur.execute("INSERT INTO tb_portifolios (user_id, distro, langs, github_link, custom_link) VALUES (%s, %s, %s, %s, %s)", devdata.__tuple__(), )
 				self.connection.commit()
+				self.logger.info(f"Inserted portifolio data for user {devdata.user_id}")
 	
 	def update_portifolio(self, new_data: DevData):
 		"""
@@ -108,6 +108,7 @@ class Portifolios(Database):
 				new_data.__dict__()
 				)
 				self.connection.commit()
+				
 
 	def del_portifolio(self, user_id: int):
 		"""
