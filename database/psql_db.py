@@ -20,7 +20,7 @@ class Database(object):
 			host=gbd.database_host,
 			database=gbd.db_name,
 			user=gbd.database_user,
-			password=gbd.database_password
+			password=gbd.database_pass
 		)
 		self.connected = True
 
