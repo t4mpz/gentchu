@@ -1,0 +1,16 @@
+{
+	"Commentary": "This file must be used as a model/template for the configurations file used in the future, for security. To create the proper configurations file use config/config.json",
+	"bot": {
+		"token": "<bot token>",
+		"version": "<bot version>"
+	},
+	"general-data": {
+		"version": "bot script version"
+	},
+	"database":{
+		"host": "database-host",
+		"username": "database-username",
+		"password": "plain password",
+		"dbname": "gentchu-bot"
+	}
+}

@@ -1,10 +1,10 @@
 from discord import Intents
 from gentchu import Gentchu
+from database.security import BotData
 
-TOKEN = "MTAwMzY4Nzc3MTYxNTAwMjY5NQ.GPpDEB.U_nPfMf7yW_3LuaOpTFciGNUUR83LO-k0oautY"
-
+bd = BotData()
 intents = Intents.default()
 # intents.message_content = True
 client = Gentchu(intents=intents)
-client.run(TOKEN)
+client.run(bd.token)
 

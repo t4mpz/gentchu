@@ -2,6 +2,9 @@ from psycopg2 import connect as psql
 # from psycopg2 import Connection
 from .objects import *
 from typing import List, Tuple
+from .security.BotData import BotData
+
+gbd = BotData()
 
 class Database(object):
 	
@@ -14,10 +17,10 @@ class Database(object):
 	
 	def __init__(self):
 		self.connection = psql(
-			host=self.HOST_CONST,
-			database=self.DATABASE,
-			user=self.USER,
-			password=self.PASSWORD
+			host=gbd.database_host,
+			database=gbd.db_name,
+			user=gbd.database_username,
+			password=gbd.database_password
 		)
 		self.connected = True
 
