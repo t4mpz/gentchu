@@ -8,10 +8,6 @@ gbd = BotData()
 
 class Database(object):
 	
-	HOST_CONST = "localhost"
-	DATABASE   = "gentchu"
-	USER       = "solenya"
-	PASSWORD   = "solenya"
 	connected  = False
 
 	
