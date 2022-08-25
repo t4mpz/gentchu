@@ -66,17 +66,19 @@ class DistroWatch(object):
 		"""
 		Simple constructor for the scrapper
 		"""
-		\
+		
 
 	def get_random_distro(self):
 		"""
 		Goes to the random distro page and gets a random distro
 		"""
-		self.driver.get(self.RANDOM_LINK)
-		src = self.driver.page_source
+		
 		bs = BeautifulSoup(src)
 		maintitle = bs.find("div", id_="TablesTitle")
 		print(maintitle.find("h1").get_text)
 
+
+if __name__ == "__main__":
+	
 
 

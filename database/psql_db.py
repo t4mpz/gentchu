@@ -7,6 +7,11 @@ import logging
 gbd = BotData()
 
 class Database(object):
+<<<<<<< HEAD
+=======
+	
+	connected  = False
+>>>>>>> 6efea02f0dfec91c99aeebd50c80351053f02c91
 
 	
 	def __init__(self):
