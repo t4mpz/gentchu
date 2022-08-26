@@ -56,6 +56,7 @@ class Distros(Database):
 		if not self.check_distro_exists(distro):
 			with self.connection.cursor() as cur:
 				cur.execute("INSERT INTO tb_distros (distro, img_path) VALUES (%s, %s);", (distro, path))
+				self.logger.info(f"[DistrosManager] Added Distro {distro}. WARNING THIS COMMAND SHOULD'NT RUN WHILE LOGGED IN")
 				self.connection.commit()
 	
 	def get_distro_url(self, distro: str) -> str:
@@ -97,7 +98,9 @@ class Portifolios(Database):
 			with self.connection.cursor() as cur:
 				cur.execute("INSERT INTO tb_portifolios (user_id, distro, langs, github_link, custom_link) VALUES (%s, %s, %s, %s, %s)", devdata.__tuple__(), )
 				self.connection.commit()
-				self.logger.info(f"Inserted portifolio data for user {devdata.user_id}")
+				self.logger.info(f"[Portifolio] Added portifolio data for user {devdata.user_id}")
+		else: 
+			self.logger.error(f"[Portifolio] Attempt of replacing user's {devdata.user_id} portifolio")
 	
 	def update_portifolio(self, new_data: DevData):
 		"""
@@ -110,6 +113,8 @@ class Portifolios(Database):
 				new_data.__dict__()
 				)
 				self.connection.commit()
+				self.logger.info(f"[Portifolio] Updated portifolio data of user's {new_data.user_id}")
+		else: self.logger.error(f"[Portifolio] Attempt to update non-existing portifolio of user {new_data.user_id}")
 				
 
 	def del_portifolio(self, user_id: int):
@@ -120,6 +125,9 @@ class Portifolios(Database):
 			with self.connection.cursor() as cur:
 				cur.execute("DELETE FROM tb_portifolios WHERE user_id = %(id)s;", {"id": user_id})
 				self.connection.commit()
+				self.logger.info(f"[Portifolio] Removed user's {user_id} portifolio")
+		else: self.logger.error(f"[Portifolio] Attempt to update non-existing portifolio of user {new_data.user_id}")
+
 	
 	def get_portifolio(self, user_id: int) -> DevData:
 		"""
@@ -184,6 +192,7 @@ class CursedUsers(Database):
 		with self.connection.cursor() as cur:
 			cur.execute("INSERT INTO tb_cursed_users (user_id) VALUES (%s);", (to_curse, ))
 			self.connection.commit()
+			self.logger.info(f"[Curses] Added cursed user {to_curse}")
 	
 	def del_cursed(self, to_uncurse: int):
 		"""
@@ -192,6 +201,7 @@ class CursedUsers(Database):
 		with self.connection.cursor() as cur:
 			cur.execute("DELETE FROM tb_cursed_users WHERE user_id = %s;", (to_uncurse, ))
 			self.connection.commit()
+			self.logger.info(f"[Curses] Removed user {to_uncurse} curse")
 	
 	def list_users(self):
 		"""
@@ -243,12 +253,14 @@ class MinecraftCoordinates(Database):
 			with self.connection.cursor() as cur:
 				cur.execute("INSERT INTO tb_coordinates_mc (user_id, save_name, x_val, y_val, z_val) VALUES (%s, %s, %s, %s, %s);", c.__tuple__())
 				self.connection.commit()
+				self.logger.info(f"[MC] Added Coordinate {c.save_name} for user {c.user_id}")
 	
 	def del_coordinate(self, coord: Coordinate):
 		if self.check_exists(coord.save_name, coord.user_id):
 			with self.connection.cursor() as cur:
 				cur.execute("DELETE FROM tb_coordinates_mc WHERE save_name = %s AND user_id = %s;", (coord.save_name, coord.user_id))
 				self.connection.commit()
+				self.logger.info(f"[MC] Removed user's {coord.user_id} coordinate {coord.save_name}")
 	
 	def upd_coordinate(self, coord: Coordinate):
 		if self.check_exists(coord.save_name, coord.user_id):
@@ -257,7 +269,7 @@ class MinecraftCoordinates(Database):
 				            (coord.x_val, coord.y_val, coord.z_val, coord.save_name, coord.user_id)
 				)
 				self.connection.commit()
-
+				self.logger.info(f"[MC] Updated user's {coord.user_id} coordinate {coord.save_name}")
 
 class SavedLinks(Database):
 	"""
@@ -296,18 +308,21 @@ class SavedLinks(Database):
 			with self.connection.cursor() as cur:
 				cur.execute("INSERT INTO tb_links (user_id, link_name, url) VALUES (%s, %s, %s);", link.__tuple__())
 				self.connection.commit()
+				self.logger.info(f"[Saved Links] Added link {link.link_name} for user {link.user_id}")
 	
 	def del_link(self, link: SavedLink):
 		if self.check_exists(link.link_name, link.user_id):
 			with self.connection.cursor() as cur:
 				cur.execute("DELETE FROM tb_links WHERE user_id = %s AND link_name = %s;", (link.user_id, link.link_name))
 				self.connection.commit()
+				self.logger.info(f"[Saved Links] Removed user's {link.user_id} link {link.link_name}")
 	
 	def upd_link(self, link: SavedLink):
 		if self.check_exists(link.link_name, link.user_id):
 			with self.connection.cursor() as cur:
 				cur.execute("UPDATE tb_links SET url = %s WHERE user_id = %s AND link_name = %s;", (link.url, link.user_id, link.link_name))
 				self.connection.commit()
+				self.logger.info(f"[Saved Links] Updated user's {link.user_id} link {link.link_name}")
 	
 class CoffeeCounter(Database):
 	"""
@@ -342,11 +357,12 @@ class CoffeeCounter(Database):
 				c.increase()
 				cur.execute("UPDATE tb_coffee_counter set total = %s, last_cup = %s WHERE user_id = %s;", (c.total, c.last_cup, c.user_id))
 			self.connection.commit()
+			self.logger.info(f"[CC] Added/Incremented coffee countage of user {user_id}")
 	
 	def del_counter(self, user_id: int):
 		if self.check_counting(user_id):
 			with self.connection.cursor() as cur:
 				cur.execute("DELETE FROM tb_coffee_counter WHERE user_id = %s;", (user_id, ))
 				self.connection.commit()
-
+			self.logger.info(f"[CC] Removed coffee countage of user {user_id}")
 
