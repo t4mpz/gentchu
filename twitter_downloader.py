@@ -11,7 +11,7 @@ def download_from_twitter(twit, path):
 	options = webdriver.ChromeOptions()
 	options.add_argument("--headless")
 	wbd = webdriver.Chrome("/usr/lib/chromium/chromedriver", chrome_options=options)
-	waiter = WebDriverWait(wbd, 10)
+	waiter = WebDriverWait(wbd, 20)
 	wbd.get("https://pt.savefrom.net/97/download-from-twitter")
 	inp = waiter.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input#sf_url")))
 	inp.send_keys(twit, Keys.RETURN)
@@ -23,7 +23,7 @@ def download_from_twitter(twit, path):
 		# dw_button.click()
 		vd_name = dw_button.get_attribute("download").replace(" ", "_")
 		vd_url = dw_button.get_attribute("href")
-		print(vd_url)
+		#print(vd_url)
 		# urlretrieve(vd_url, "tmp/test.mp4")
 		rr = get(vd_url, timeout=10, stream=True)
 		with open(path, "wb") as st:
