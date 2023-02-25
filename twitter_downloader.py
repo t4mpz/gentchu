@@ -8,9 +8,10 @@ from selenium.webdriver.common.keys import Keys
 
 
 def download_from_twitter(twit, path):
-	options = webdriver.ChromeOptions()
+	# options = webdriver.ChromeOptions()
+	options = webdriver.FirefoxOptions()
 	options.add_argument("--headless")
-	wbd = webdriver.Chrome("/usr/lib/chromium/chromedriver", chrome_options=options)
+	wbd = webdriver.Firefox(options=options)
 	waiter = WebDriverWait(wbd, 20)
 	wbd.get("https://pt.savefrom.net/97/download-from-twitter")
 	inp = waiter.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input#sf_url")))
